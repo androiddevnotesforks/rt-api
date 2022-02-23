@@ -153,7 +153,7 @@ const root = {
 app.use('/rtapi/graphql', graphqlHTTP({
     schema: schema,
     rootValue: root,
-    graphiql: true,
+    graphiql: false,
 }));
 
 (async function () {
