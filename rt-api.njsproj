@@ -84,6 +84,9 @@
     <Compile Include="search-suggestions\searchSuggestionsDb.js">
       <SubType>Code</SubType>
     </Compile>
+    <Content Include="scripts\db-migration.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="rutracker-api-master\.gitattributes" />
@@ -101,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="feeds\" />
+    <Folder Include="scripts\" />
     <Folder Include="rutracker-source\" />
     <Folder Include="search-suggestions\" />
     <Folder Include="rutracker-api-master\" />
