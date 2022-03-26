@@ -154,6 +154,19 @@ app.use('/rtapi/graphql', graphqlHTTP({
     schema: schema,
     rootValue: root,
     graphiql: false,
+    customFormatErrorFn: (error) => {      
+        logger.error(`
+            message: ${error.message},
+            locations: ${error.locations},
+            path: ${error.path},
+            stack: ${error.stack ? error.stack.split('\n') : []}`
+        )
+        return {
+            message: error.message,
+            locations: error.locations,
+            path: error.path
+        }
+    }
 }));
 
 (async function () {
