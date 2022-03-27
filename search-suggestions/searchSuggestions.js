@@ -14,6 +14,7 @@ module.exports.createNewSearchSuggestion = async function (_query) {
     while (query.includes("  ")) {
         query = query.replace("  ", " ")
     }
+    query = query.trim()
     query = query.toLowerCase()
     const dbSuggestion = await db.getByTitle(query)
     if (dbSuggestion) {

@@ -101,6 +101,9 @@
     <Content Include="rutracker-api-master\tests\mocks\search_results_page.html" />
     <Content Include="rutracker-api-master\tests\mocks\thread.html" />
     <Content Include="rutracker-api-master\tests\__snapshots__\acceptance.test.js.snap" />
+    <Content Include="scripts\trim-spaces-migration.js">
+      <SubType>Code</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="feeds\" />
