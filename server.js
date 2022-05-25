@@ -8,6 +8,7 @@ const config = require('./config').config
 const feedsRepository = require('./feeds/feedsRepository')
 const searchQueriesCache = require('./searchQueriesCache')
 const searchSuggestions = require('./search-suggestions/searchSuggestions')
+const schedule = require('node-schedule')
 
 const app = express()
 app.use(express.json())
@@ -78,6 +79,10 @@ async function getSearchSuggestions(query) {
     return await searchSuggestions.findSuggestions(query)
 }
 
+async function getTrendingSearches() {
+    return await searchSuggestions.getTrendingSuggestions()
+}
+
 const schema = buildSchema(`
 type Torrent {
     id: String!
@@ -103,7 +108,7 @@ type SearchResult {
 type RssChannel {
     title: String!
     threadId: String!
-    entries: [RssChannelEntry!]
+    entries: [RssChannelEntry!]!
 }
 
 type RssChannelEntry {
@@ -119,6 +124,7 @@ type Query {
     magnetLink(id: String!): String!
     getRss(threadId: String!): RssChannel!
     getSearchSuggestions(query: String!): [String!]!
+    getTrendingSearches: [String!]!
 }
 
 type Mutation {
@@ -147,6 +153,9 @@ const root = {
     },
     getSearchSuggestions: ({ query }) => {
         return getSearchSuggestions(query)
+    },
+    getTrendingSearches: () => {
+        return getTrendingSearches()
     }
 }
 
@@ -175,3 +184,5 @@ app.use('/rtapi/graphql', graphqlHTTP({
         logger.info("server started")
     })
 })()
+
+schedule.scheduleJob(config.TRENDS_UPDATE_START_CRON_STYLE, searchSuggestions.updateTrendingSuggestions)

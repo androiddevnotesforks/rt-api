@@ -1,5 +1,6 @@
 /config.js
 # firebase config
+# need to add pakage.json and package-lock.json manually
 /*.json
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,visualstudio

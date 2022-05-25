@@ -44,3 +44,8 @@ module.exports.findText = async function (query, limit) {
     ])
     return await agg.toArray()
 }
+
+module.exports.getCursor = async function () {
+    const db = mongoUtil.getDb()
+    return await db.collection(collection).find()
+}

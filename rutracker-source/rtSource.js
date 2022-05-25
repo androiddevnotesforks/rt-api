@@ -68,7 +68,7 @@ module.exports.getTorrentDescription = async function (id, SDUIVersion) {
     const threadId = threadUrl.get('tracker.php?f')
 
     let SDUIData
-    if (SDUIVersion == config.SDUI_VERSION) {
+    if (SDUIVersion == 1) {
         SDUIData = await htmlToSDUIConverter.convert($('.post_body'))
     } else {
         SDUIData = null
