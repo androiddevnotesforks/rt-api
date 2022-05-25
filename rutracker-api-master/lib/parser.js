@@ -45,6 +45,10 @@ class Parser {
           host: 'https://rutracker.org'
         });
 
+        if (isNaN(torrent.seeds)) {
+            torrent.seeds = 0
+        }
+
         results.push(torrent);
       }
 
