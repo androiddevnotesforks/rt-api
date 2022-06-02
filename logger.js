@@ -15,16 +15,16 @@ if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir);
 }
 
-const dailyRotateInfoFileTransport = new transports.DailyRotateFile({
-    filename: `${logDir}/%DATE%-rtapi-info.log`,
+const dailyRotateDebugFileTransport = new transports.DailyRotateFile({
+    filename: `${logDir}/%DATE%-rtapi-debug.log`,
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
     maxSize: '20m',
-    level: 'info'
+    level: 'debug'
 });
 
 const dailyRotateVerboseFileTransport = new transports.DailyRotateFile({
-    filename: `${logDir}/%DATE%-rtapi-debug.log`,
+    filename: `${logDir}/%DATE%-rtapi-verbose.log`,
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
     maxSize: '20m',
@@ -53,19 +53,19 @@ const logger = createLogger({
     ),
     transports: [
         console,
-        dailyRotateInfoFileTransport,
+        dailyRotateDebugFileTransport,
         dailyRotateVerboseFileTransport,
         telegramBot
     ],
     exceptionHandlers: [
         console,
-        dailyRotateInfoFileTransport,
+        dailyRotateDebugFileTransport,
         dailyRotateVerboseFileTransport,
         telegramBot
     ],
     rejectionHandlers: [
         console,
-        dailyRotateInfoFileTransport,
+        dailyRotateDebugFileTransport,
         dailyRotateVerboseFileTransport,
         telegramBot
     ]

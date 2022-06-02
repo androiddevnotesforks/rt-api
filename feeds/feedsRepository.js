@@ -9,7 +9,7 @@ module.exports.getRssFeed = async function (id) {
         const feed = await rssSource.getRssItems(id)
         await db.insertOne({
             ...feed,
-            subscribers: [],//idk how mongo handles Set(), so using array here
+            subscribers: [],//Set() fits here better
             lastUpdateTimestamp: Date.now()
         })
         logger.debug(`created new feed: ${feed.title}`)

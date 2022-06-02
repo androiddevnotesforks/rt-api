@@ -162,7 +162,7 @@ const root = {
 app.use('/rtapi/graphql', graphqlHTTP({
     schema: schema,
     rootValue: root,
-    graphiql: false,
+    graphiql: config.IS_GRAPHIQL_ENABLED,
     customFormatErrorFn: (error) => {      
         logger.error(`
             message: ${error.message},

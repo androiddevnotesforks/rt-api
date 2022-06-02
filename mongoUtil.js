@@ -1,11 +1,12 @@
 ﻿const MongoClient = require("mongodb").MongoClient
+const config = require('./config').config
 
 let mongoClient
 let _db
 
 module.exports = {
     connectToDb: async function (dbname) {
-        mongoClient = new MongoClient("mongodb://127.0.0.1:27017/", { useUnifiedTopology: true });
+        mongoClient = new MongoClient(config.MONGODB_CONNECTION_STRING, { useUnifiedTopology: true });
         await mongoClient.connect()
         _db = await mongoClient.db(dbname)
     },

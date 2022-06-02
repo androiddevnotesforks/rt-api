@@ -1,10 +1,11 @@
 const MongoClient = require("mongodb").MongoClient
+const config = require('../config').config
 const collection = "sugg"
 
 // приводим все рекомендации в бд к нижнему регистру и объединяем повторы
 
 async function start() {
-    const mongoClient = new MongoClient("mongodb://127.0.0.1:27017/", { useUnifiedTopology: true });
+    const mongoClient = new MongoClient(config.MONGODB_CONNECTION_STRING, { useUnifiedTopology: true });
     await mongoClient.connect()
     const db = await mongoClient.db("rtapi")
 

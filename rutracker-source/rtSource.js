@@ -5,7 +5,6 @@ const logger = require('../logger').logger
 const config = require('../config').config
 const htmlToSDUIConverter = require('./htmlToSDUIConverter')
 
-
 const rutracker = new RutrackerApi(config.HOST);
 rutracker.login({ username: config.USERNAME, password: config.PASSWORD })
 

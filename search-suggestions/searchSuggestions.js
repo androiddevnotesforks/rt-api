@@ -50,7 +50,8 @@ async function updateTrendingSuggestions() {
         const sugg = await cursor.next()
         let counter = 0
         for (const request of sugg.requests) {
-            if (currentTimestamp - request.timestamp < config.TRENDS_OBSERVING_TIME_INTERVAL) {
+            // todo: add some logic to remove old timestamps, otherwise db will grow in size infinitely 
+            if (currentTimestamp - request.timestamp < config.TRENDS_OBSERVING_DAYS_COUNT * 1000 * 60 * 60 * 24) {
                 counter++
             }
         }

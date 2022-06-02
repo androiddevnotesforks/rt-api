@@ -1,15 +1,15 @@
 ﻿const admin = require('firebase-admin')
-const serviceAccount = require('./rtapi-1c6f6-firebase-adminsdk-1zxxa-429a1f4e5b.json')
+const config = require('./config').config
+const serviceAccount = require(`./${config.FIREBASE_ADMIN_SDK_CONFIG_FILE_NAME}`)
 const mongoUtil = require("./mongoUtil")
 const logger = require('./logger').logger
-const config = require('./config').config
 const db = require('./feeds/feedsDb')
 const rssSource = require('./feeds/rssSource')
 
 async function update() {
     const cursor = await db.getCursorForFeedsWithSubscribers()
     const count = await cursor.count()
-    logger.debug(`update started, feeds with subscribers: ${count}, interval: ${config.RSS_UPDATE_INTERVAL / 1000 } s`)
+    logger.debug(`update started, feeds with subscribers: ${count}, interval: ${config.RSS_UPDATE_INTERVAL / 1000} s`)
 
     while (await cursor.hasNext()) {
         const dbFeed = await cursor.next()
@@ -46,7 +46,7 @@ async function update() {
                             logger.debug(`failed tokens: ${failedTokens}`)
                             // todo нужно добавить логику обработки недействительных токенов, напр. если токен фейлится неск. раз подряд в течение
                             // определенного времени, то удаляем его. но сначала проверить, возможно у гугла есть свой механизм определения недействительных токенов, м.б. 
-                            // запрос с токеном на какой-то эндпоинт. по первому фейлу, как написано ниже, удалять бессмысленно, т.к. возможных причин много
+                            // запрос с токеном на какой-то эндпоинт. по первому фейлу, как написано ниже, удалять бессмысленно, т.к. возможных причин фейла много
 
                             //failedTokens.forEach((token) => {
                             //    const index = dbFeed.subscribers.indexOf(token)
