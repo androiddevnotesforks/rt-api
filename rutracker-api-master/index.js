@@ -11,9 +11,9 @@ class RutrackerApi {
         return this.pageProvider.login(username, password);
     }
 
-    search({ query, sort, order }) {
+    search({ query, sort, order, feed }) {
         return this.pageProvider
-            .search({ query, sort, order })
+            .search({ query, sort, order, feed })
             .then(html => this.parser.parseSearch(html));
     }
 

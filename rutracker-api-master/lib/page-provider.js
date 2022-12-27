@@ -3,7 +3,8 @@ const { AuthorizationError, NotAuthorizedError } = require("./errors");
 const {
     orderMiddleware,
     queryMiddleware,
-    sortMiddleware
+    sortMiddleware,
+    feedMiddleware
 } = require("./middlewares");
 const { decodeWindows1251 } = require("./utils");
 const axios = require("axios");
@@ -20,7 +21,7 @@ class PageProvider {
         this.threadUrl = `${this.host}/forum/viewtopic.php`;
         this.downloadUrl = `${this.host}/forum/dl.php`;
 
-        this.searchMiddlewares = [queryMiddleware, sortMiddleware, orderMiddleware];
+        this.searchMiddlewares = [queryMiddleware, sortMiddleware, orderMiddleware, feedMiddleware];
     }
 
     async login(username, password) {

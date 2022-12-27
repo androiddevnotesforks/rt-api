@@ -4,6 +4,7 @@ class Torrent {
     constructor({
         author = null,
         category = null,
+        categoryId = null,
         id = null,
         leeches = null,
         seeds = null,
@@ -16,6 +17,7 @@ class Torrent {
     }) {
         this.author = author;
         this.category = category;
+        this.categoryId = categoryId
         this.id = id;
         this.leeches = leeches;
         this.seeds = seeds;

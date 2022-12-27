@@ -2,7 +2,7 @@
 
 let searchQueriesCache = []
 
-module.exports.lookInCache = function (query, sort, order) {
+module.exports.lookInCache = function (query, sort, order, feed) {
     const updatedCache = []
     let result = null
     //looking for cached query and clearing old cache in one loop
@@ -11,7 +11,8 @@ module.exports.lookInCache = function (query, sort, order) {
             updatedCache.push(value)
             if (value.query == query &&
                 value.sort == sort &&
-                value.order == order
+                value.order == order &&
+                value.feed == feed
             ) {
                 result = { torrents: value.torrents, size: value.torrents.length }
             }
@@ -21,6 +22,6 @@ module.exports.lookInCache = function (query, sort, order) {
     return result
 }
 
-module.exports.pushToCache = function (query, sort, order, torrents) {
-    searchQueriesCache.push({ query: query, sort: sort, order: order, torrents: torrents, createdAt: Date.now() })
+module.exports.pushToCache = function (query, sort, order, feed, torrents) {
+    searchQueriesCache.push({ query: query, sort: sort, order: order, feed: feed, torrents: torrents, createdAt: Date.now() })
 }

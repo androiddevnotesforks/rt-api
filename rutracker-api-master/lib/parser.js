@@ -1,6 +1,6 @@
 const cheerio = require("cheerio");
 const Torrent = require("./torrent");
-const prettyBytes = require('pretty-bytes');
+const { URLSearchParams } = require('url')
 
 class Parser {
   constructor(host) {
@@ -35,6 +35,7 @@ class Parser {
           state: state.attr("title"),
           id: title.find("div a").attr("data-topic_id"),
           category: category.find(".f-name a").html(),
+          categoryId: (new URLSearchParams(category.find(".f-name a").attr("href"))).get("tracker.php?f"),
           title: title.find("div a").html(),
           author: author.find("div a").html(),
           size: Number(size.attr("data-ts_text")),
