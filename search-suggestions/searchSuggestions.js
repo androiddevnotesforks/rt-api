@@ -45,23 +45,26 @@ async function updateTrendingSuggestions() {
     logger.verbose(`updateTrendingSuggestions started, found ${await cursor.count()} search suggestions`)
     const currentTimestamp = Date.now()
     const trends = []
-
+    const opsForDbBulkUpdates = []
     while (await cursor.hasNext()) {
         const sugg = await cursor.next()
-        let counter = 0
+        const validRequests = []
         for (const request of sugg.requests) {
-            // todo: add some logic to remove old timestamps, otherwise db will grow in size infinitely 
             if (currentTimestamp - request.timestamp < config.TRENDS_OBSERVING_DAYS_COUNT * 1000 * 60 * 60 * 24) {
-                counter++
+                validRequests.push(request)
             }
         }
-        if (counter > 0) {
+        if (validRequests.length > 0) {
             trends.push({
                 title: sugg.title,
-                counter: counter
+                counter: validRequests.length
             })
         }
+        sugg.requests = validRequests
+        opsForDbBulkUpdates.push(db.getSingleOpForBulkUpdate(sugg))
     }
+    // veeery expensive operation
+    //await db.bulkUpdate(opsForDbBulkUpdates)
     trends.sort((a, b) => b.counter - a.counter)
     trends.slice(0, 20).forEach(trend => logger.verbose(`${trend.title}: ${trend.counter}`))
     trendingSuggestions = trends

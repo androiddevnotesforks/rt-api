@@ -16,6 +16,24 @@ module.exports.updateOne = async function (suggestion) {
         })
 }
 
+module.exports.bulkUpdate = async function(ops) {
+    const db = mongoUtil.getDb()
+    await db.collection(collection).bulkWrite(ops)
+}
+
+module.exports.getSingleOpForBulkUpdate = function(suggestion) {
+    return {
+        updateOne: {
+            filter: { title: suggestion.title },
+            update: {
+                $set: {
+                    requests: suggestion.requests
+                }
+            }
+        }
+    }
+}
+
 module.exports.getByTitle = async function (title) {
     const db = mongoUtil.getDb()
     return await db.collection(collection).findOne({ title: title })
