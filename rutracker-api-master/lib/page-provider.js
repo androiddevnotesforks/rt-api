@@ -48,7 +48,7 @@ class PageProvider {
         }
 
         const response = await this.loginRequestPromise
-        const [cookie] = response.headers["set-cookie"][0].split(";");
+        const [cookie] = response.headers["set-cookie"][1].split(";");
         this.cookie = cookie;
         this.authorized = true;
         this.loginRequestPromise = null

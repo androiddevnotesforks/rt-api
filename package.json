@@ -21,7 +21,7 @@
     "winston-telegram": "2.5.0",
     "node-schedule": "2.0.0",
     "firebase-admin": "10.2.0",
-	  "graphql": "15.8.0"
+    "graphql": "15.8.0"
   },
   "scripts": {
     "postinstall": "cd rutracker-api-master && npm install"
