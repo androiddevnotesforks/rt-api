@@ -18,7 +18,7 @@ async function update() {
             const difference = updatedFeed.entries.filter(updatedEntry => !dbFeed.entries.some(dbFeedEntry => updatedEntry.id == dbFeedEntry.id))
             dbFeed.title = updatedFeed.title
             dbFeed.entries = updatedFeed.entries
-            console.log(`updating feed ${dbFeed.title}, subsribers: ${dbFeed.subscribers.length}`)
+            //console.log(`updating feed ${dbFeed.title}, subsribers: ${dbFeed.subscribers.length}`)
             dbFeed.lastUpdateTimestamp = Date.now()
             await db.updateOne(dbFeed)
             if (difference.length != 0) { 
