@@ -5,10 +5,11 @@ const config = require('../config').config
 let trendingSuggestions
 
 module.exports.findSuggestions = async function (query) {
-    const result = await db.findText(query, config.SEARCH_SUGGESTIONS_PER_QUERY)
-    return result.map(suggestion => {
-        return suggestion.title
-    })
+    const result = await db.findText(query, config.SEARCH_SUGGESTIONS_PER_QUERY * 3)
+    return result
+        .sort((a, b) => b.requests.length - a.requests.length)
+        .slice(0, config.SEARCH_SUGGESTIONS_PER_QUERY)
+        .map(suggestion => suggestion.title)
 }
 
 module.exports.createNewSearchSuggestion = async function (_query) {
