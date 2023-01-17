@@ -16,11 +16,11 @@ async function update() {
         try {
             const updatedFeed = await rssSource.getRssItems(dbFeed.threadId)
             const difference = updatedFeed.entries.filter(updatedEntry => !dbFeed.entries.some(dbFeedEntry => updatedEntry.id == dbFeedEntry.id))
-            logger.debug(`found ${difference.length} new entries for feed ${dbFeed.title}`)
             dbFeed.title = updatedFeed.title
             dbFeed.entries = updatedFeed.entries
+            console.log(`updating feed ${dbFeed.title}, subsribers: ${dbFeed.subscribers.length}`)
             dbFeed.lastUpdateTimestamp = Date.now()
-            db.updateOne(dbFeed)
+            await db.updateOne(dbFeed)
             if (difference.length != 0) { 
                 for (const entry of difference) {
                     const message = {
@@ -35,29 +35,30 @@ async function update() {
                         },
                         tokens: dbFeed.subscribers
                     }
-                    admin.messaging().sendMulticast(message).then(response => {
-                        if (response.failureCount > 0) {
-                            const failedTokens = []
-                            response.responses.forEach((resp, idx) => {
-                                if (!resp.success) {
+                    const response = await admin.messaging().sendMulticast(message)
+                    if (response.failureCount > 0) {
+                        const failedTokens = []
+                        response.responses.forEach((resp, idx) => {
+                            if (!resp.success) {
+                                if (resp.error.errorInfo.code == 'messaging/registration-token-not-registered') {
+                                    logger.debug("invalid token, will be removed")
                                     failedTokens.push(dbFeed.subscribers[idx])
+                                } else {
+                                    logger.debug("token failed by unknown reason")
                                 }
-                            })
-                            logger.debug(`failed tokens: ${failedTokens}`)
-                            // todo нужно добавить логику обработки недействительных токенов, напр. если токен фейлится неск. раз подряд в течение
-                            // определенного времени, то удаляем его. но сначала проверить, возможно у гугла есть свой механизм определения недействительных токенов, м.б. 
-                            // запрос с токеном на какой-то эндпоинт. по первому фейлу, как написано ниже, удалять бессмысленно, т.к. возможных причин фейла много
-
-                            //failedTokens.forEach((token) => {
-                            //    const index = dbFeed.subscribers.indexOf(token)
-                            //    if (index > -1) {
-                            //        dbFeed.subscribers.splice(index, 1)
-                            //    }
-                            //})
-                            //db.updateSubscribers(dbFeed)
-                        }
-                        logger.debug(`${response.successCount} message(s) were sent successfully`)
-                    })
+                                
+                            }
+                        })
+                        // remove failed tokens
+                        failedTokens.forEach((token) => {
+                           const index = dbFeed.subscribers.indexOf(token)
+                           if (index > -1) {
+                               dbFeed.subscribers.splice(index, 1)
+                           }
+                        })
+                        await db.updateSubscribers(dbFeed)
+                    }
+                    logger.debug(`${response.successCount} message(s) were sent successfully`)
                 }
             }
         } catch (e) {
