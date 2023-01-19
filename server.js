@@ -25,20 +25,20 @@ app.get("/rtapi/torrent/description", function (req, res) {
     getTorrentDescription(id, SDUIVersion).then(result => res.json(result))
 })
 
-async function searchTorrents(query, sort, order, feed, startIndex, endIndex) {
-    logger.verbose(`query: ${query}, sort: ${sort}, order: ${order}, feed: ${feed}, startIndex: ${startIndex}, endIndex: ${endIndex}`)
+async function searchTorrents(query, sort, order, feeds, startIndex, endIndex) {
+    logger.verbose(`query: ${query}, sort: ${sort}, order: ${order}, feeds: ${feeds}, startIndex: ${startIndex}, endIndex: ${endIndex}`)
 
     let result
-    const cachedResult = searchQueriesCache.lookInCache(query, sort, order, feed)
+    const cachedResult = searchQueriesCache.lookInCache(query, sort, order, feeds)
     if (cachedResult != null) {
         logger.debug('using cached result')
         result = cachedResult
     } else {
-        const torrents = await rtSource.search(query, sort, order, feed)
+        const torrents = await rtSource.search(query, sort, order, feeds)
         if (torrents.length != 0) {
             searchSuggestions.createNewSearchSuggestion(query)
         }
-        searchQueriesCache.pushToCache(query, sort, order, feed, torrents)
+        searchQueriesCache.pushToCache(query, sort, order, feeds, torrents)
         result = { torrents: torrents, size: torrents.length }
     }
     return { torrents: result.torrents.slice(startIndex, endIndex), size: result.size }
@@ -121,7 +121,7 @@ type RssChannelEntry {
 }
 
 type Query {
-    search(query: String!, sort: String!, order: String!, feed: String, startIndex: Int!, endIndex: Int!): SearchResult!
+    search(query: String!, sort: String!, order: String!, feeds: [String!], startIndex: Int!, endIndex: Int!): SearchResult!
     magnetLink(id: String!): String!
     getRss(threadId: String!): RssChannel!
     getSearchSuggestions(query: String!): [String!]!
@@ -135,8 +135,8 @@ type Mutation {
 `)
 
 const root = {
-    search: ({ query, sort, order, feed, startIndex, endIndex }) => {
-        return searchTorrents(query, sort, order, feed, startIndex, endIndex)
+    search: ({ query, sort, order, feeds, startIndex, endIndex }) => {
+        return searchTorrents(query, sort, order, feeds, startIndex, endIndex)
     },
     magnetLink: ({ id }) => {
         return getMagnetLink(id)

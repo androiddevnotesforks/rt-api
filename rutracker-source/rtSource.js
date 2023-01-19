@@ -8,13 +8,13 @@ const htmlToSDUIConverter = require('./htmlToSDUIConverter')
 const rutracker = new RutrackerApi(config.HOST);
 rutracker.login({ username: config.USERNAME, password: config.PASSWORD })
 
-module.exports.search = async function (query, sort, order, feed) {
+module.exports.search = async function (query, sort, order, feeds) {
     let searchResult
     try {
-        searchResult = await rutracker.search({ query: query, sort: sort, order: order, feed: feed })
+        searchResult = await rutracker.search({ query: query, sort: sort, order: order, feeds: feeds })
     } catch (e) {
         await refreshCookies()
-        searchResult = await rutracker.search({ query: query, sort: sort, order: order, feed: feed })
+        searchResult = await rutracker.search({ query: query, sort: sort, order: order, feeds: feeds })
     }
     return searchResult
 }

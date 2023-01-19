@@ -1,8 +1,9 @@
 ﻿const config = require('./config').config
+const _ = require('lodash')
 
 let searchQueriesCache = []
 
-module.exports.lookInCache = function (query, sort, order, feed) {
+module.exports.lookInCache = function (query, sort, order, feeds) {
     const updatedCache = []
     let result = null
     //looking for cached query and clearing old cache in one loop
@@ -12,7 +13,7 @@ module.exports.lookInCache = function (query, sort, order, feed) {
             if (value.query == query &&
                 value.sort == sort &&
                 value.order == order &&
-                value.feed == feed
+                _.isEqual(value.feeds, feeds)
             ) {
                 result = { torrents: value.torrents, size: value.torrents.length }
             }
@@ -22,6 +23,6 @@ module.exports.lookInCache = function (query, sort, order, feed) {
     return result
 }
 
-module.exports.pushToCache = function (query, sort, order, feed, torrents) {
-    searchQueriesCache.push({ query: query, sort: sort, order: order, feed: feed, torrents: torrents, createdAt: Date.now() })
+module.exports.pushToCache = function (query, sort, order, feeds, torrents) {
+    searchQueriesCache.push({ query: query, sort: sort, order: order, feeds: feeds, torrents: torrents, createdAt: Date.now() })
 }
