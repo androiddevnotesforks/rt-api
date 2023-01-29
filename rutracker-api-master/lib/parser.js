@@ -64,6 +64,35 @@ class Parser {
 
     return $(".magnet-link").attr("href");
   }
+
+  parseFeeds(rawHtml) {
+    const $ = cheerio.load(rawHtml, { decodeEntities: false })
+    const results = []
+    const optgroups = $("#fs-main").children("optgroup")
+    let currentRootFeedId
+    optgroups.each((_, optgroup) => {
+      if ($(optgroup).attr().label.trim() == "Новости") {
+        console.log(`skip optgtoup ${$(optgroup).attr().label.trim()}`)
+      } else {
+        $(optgroup).children("option").each((_, option) => {
+          const id = $(option).attr().value
+          let title = $(option).text().trim()
+          if (!title.startsWith("|-")) {
+            currentRootFeedId = id
+          } else {
+            title = title.substring(3)
+          }
+          
+          results.push({
+            id: id,
+            title: title,
+            rootFeedId: currentRootFeedId
+          })
+        })
+      }
+    })
+    //console.log(results)
+  }
 }
 
 module.exports = Parser;

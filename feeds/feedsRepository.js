@@ -6,6 +6,7 @@ const logger = require('../logger').logger
 module.exports.getRssFeed = async function (id) {
     const dbFeed = await db.getByThreadId(id)
     if (dbFeed == null) {
+        // todo return error
         const feed = await rssSource.getRssItems(id)
         await db.insertOne({
             ...feed,
@@ -41,5 +42,14 @@ module.exports.unsubscribeFromFeed = async function (id, deviceToken) {
         await db.updateSubscribers(feed)
     } else {
         logger.debug('user already unsubscribed')
+    }
+}
+
+module.exports.updateAllFeeds = async function(freshFeeds) {
+    for (const freshFeed of freshFeeds) {
+        const dbFeed = await db.getByThreadId()
+        if (dbFeed == null) {
+            
+        }
     }
 }

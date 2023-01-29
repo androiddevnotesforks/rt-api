@@ -55,6 +55,23 @@ class PageProvider {
         return true;
     }
 
+    feeds() {
+        if (!this.authorized) {
+            return Promise.reject(new NotAuthorizedError())
+        }
+
+        const url = new URL(this.searchUrl)
+
+        return this.request({
+            url: url.toString(),
+            method: "POST",
+            responseType: "arraybuffer",
+            headers: {
+                Cookie: this.cookie
+            }
+        }).then(response => decodeWindows1251(response.data));
+    }
+
     search(params) {
         if (!this.authorized) {
             return Promise.reject(new NotAuthorizedError());

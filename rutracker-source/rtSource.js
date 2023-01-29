@@ -6,6 +6,7 @@ const config = require('../config').config
 const htmlToSDUIConverter = require('./htmlToSDUIConverter')
 
 const rutracker = new RutrackerApi(config.HOST);
+//todo move to async function
 rutracker.login({ username: config.USERNAME, password: config.PASSWORD })
 
 module.exports.search = async function (query, sort, order, feeds) {
@@ -83,6 +84,10 @@ module.exports.getTorrentDescription = async function (id, SDUIVersion) {
         state: state,
         threadId: threadId
     }
+}
+
+module.exports.getAllFeeds = async function() {
+    return await rutracker.feeds()
 }
 
 function refreshCookies() {

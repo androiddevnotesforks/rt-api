@@ -17,6 +17,12 @@ class RutrackerApi {
             .then(html => this.parser.parseSearch(html));
     }
 
+    feeds() {
+        return this.pageProvider
+            .feeds()
+            .then(html => this.parser.parseFeeds(html))
+    }
+
     thread(id) {
         return this.pageProvider.thread(id)
     }
