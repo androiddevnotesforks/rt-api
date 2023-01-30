@@ -43,7 +43,7 @@ module.exports.getTrendingSuggestions = async function () {
 
 async function updateTrendingSuggestions() {
     const cursor = await db.getCursor()
-    logger.verbose(`updateTrendingSuggestions started, found ${await cursor.count()} search suggestions`)
+    logger.info(`updateTrendingSuggestions started, found ${await cursor.count()} search suggestions`)
     const currentTimestamp = Date.now()
     const trends = []
     const opsForDbBulkUpdates = []

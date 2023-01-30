@@ -83,6 +83,13 @@ async function getTrendingSearches() {
     return await searchSuggestions.getTrendingSuggestions()
 }
 
+async function updateFeeds() {
+    logger.info("feeds update started")
+    const freshFeeds = await rtSource.getAllFeeds()
+    await feedsRepository.updateAllFeeds(freshFeeds)
+    logger.info("feeds update finished")
+}
+
 const schema = buildSchema(`
 type Torrent {
     id: String!
@@ -181,9 +188,12 @@ app.use('/rtapi/graphql', graphqlHTTP({
 
 (async function () {
     await mongoUtil.connectToDb("rtapi")
+    await rtSource.refreshCookies()
     app.listen(config.PORT, function () {
         logger.info("server started")
     })
+    //updateFeeds()
 })()
 
 schedule.scheduleJob(config.TRENDS_UPDATE_START_CRON_STYLE, searchSuggestions.updateTrendingSuggestions)
+schedule.scheduleJob(config.FEEDS_UPDATE_START_CRON_STYLE, updateFeeds)

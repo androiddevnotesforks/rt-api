@@ -91,6 +91,7 @@ class Parser {
         })
       }
     })
+    return results
     //console.log(results)
   }
 }

@@ -39,7 +39,7 @@ const console = new transports.Console({
 const telegramBot = new TelegramLogger({
     token: config.TELEGRAM_BOT_TOKEN,
     chatId: config.TELEGRAM_CHAT_ID,
-    level: 'error',
+    level: 'info',
     batchingDelay: 1000
 })
 
